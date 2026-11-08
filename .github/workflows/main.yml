@@ -24,7 +24,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Ejecutar script de web scraping
-        run: python argumedo_kevin_hernandez_astrid_analizando_eal1.py
+        run: python argumedo_kevin_hernadez_astrid_analizando_ea1.py
 
             
 
