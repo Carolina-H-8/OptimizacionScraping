@@ -1,0 +1,23 @@
+# Entornos virtuales
+.venv/
+venv/
+env/
+ENV/
+
+# Archivos compilados y caché de Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Cuadernos de Jupyter / Colab temporales
+.ipynb_checkpoints/
+
+# Archivos de configuración local del editor
+.vscode/
+.idea/
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db

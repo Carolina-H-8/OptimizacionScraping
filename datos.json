@@ -1,0 +1,62 @@
+{
+    "ultima_actualizacion": "2026-11-25 19:07:18",
+    "total": 8,
+    "productos": [
+        {
+            "Nombre": "APPLE MacBook Pro 2019| Portátil Corporativo",
+            "Precio original": "",
+            "Precio con descuento": "$ 1.889.000",
+            "Enlace": "https://sitecsas.com/producto/apple-macbook-pro-2019-portatil-corporativo/",
+            "Imagen": "https://sitecsas.com/wp-content/uploads/portatil-macbook-pro-2019-vista-01.webp"
+        },
+        {
+            "Nombre": "Dell Latitude 3420 | Portátil Corporativo",
+            "Precio original": "",
+            "Precio con descuento": "$ 1.149.000",
+            "Enlace": "https://sitecsas.com/producto/dell-latitude-3420-portatil-corporativo/",
+            "Imagen": "https://sitecsas.com/wp-content/uploads/2026/11/portatil-dell-latitude-3420-vista-01.webp"
+        },
+        {
+            "Nombre": "HP ProBook 440 G7 | Portátil Corporativo",
+            "Precio original": "",
+            "Precio con descuento": "$ 1.279.000",
+            "Enlace": "https://sitecsas.com/producto/hp-probook-440-g7-portatil-corporativo/",
+            "Imagen": "https://sitecsas.com/wp-content/uploads/portatil-hp-probook-440-g7-vista-01.webp"
+        },
+        {
+            "Nombre": "HP ProBook 440 G8 | Portátil Corporativo",
+            "Precio original": "$ 1.425.000",
+            "Precio con descuento": "$ 1.399.000",
+            "Enlace": "https://sitecsas.com/producto/hp-probook-440-g8-portatil-corporativo/",
+            "Imagen": "https://sitecsas.com/wp-content/uploads/hp-probook-440-g8-portatil-corporativo-vista-frontal.webp"
+        },
+        {
+            "Nombre": "Lenovo Thinkpad L14 Gen 1 | Portátil Corporativo",
+            "Precio original": "$ 1.473.700",
+            "Precio con descuento": "$ 1.399.990",
+            "Enlace": "https://sitecsas.com/producto/lenovo-thinkpad-l14-gen-1-portatil-corporativo/",
+            "Imagen": "https://sitecsas.com/wp-content/uploads/lenovo-thinkpad-l14-gen-1-portatil-corporativo-vista-frontal.webp"
+        },
+        {
+            "Nombre": "Lenovo Thinkpad L14 Gen 2 | Portátil Corporativo",
+            "Precio original": "",
+            "Precio con descuento": "$ 1.359.000",
+            "Enlace": "https://sitecsas.com/producto/lenovo-thinkpad-l14-gen-2-portatil-corporativo/",
+            "Imagen": "https://sitecsas.com/wp-content/uploads/2026/11/portatil-thinkpad-l14-vista-01.webp"
+        },
+        {
+            "Nombre": "LENOVO ThinkPad T14 Gen 2 Touch | Portátil Corporativo",
+            "Precio original": "$ 1.420.000",
+            "Precio con descuento": "$ 1.349.000",
+            "Enlace": "https://sitecsas.com/producto/lenovo-thinkpad-t14-gen-2-touch-portatil-corporativo/",
+            "Imagen": "https://sitecsas.com/wp-content/uploads/2026/11/portatil-thinkpad-t14-touch-vista-01.webp"
+        },
+        {
+            "Nombre": "LENOVO ThinkPad X13 Yoga 2-en-1 | Portátil Corporativo",
+            "Precio original": "",
+            "Precio con descuento": "$ 1.479.000",
+            "Enlace": "https://sitecsas.com/producto/lenovo-thinkpad-x13-yoga-2-en-1-portatil-corporativo/",
+            "Imagen": "https://sitecsas.com/wp-content/uploads/portatil-thinkpad-x13-yoga-Intel-Core-i5-RAM-16GB-SSD-256GB-01.webp"
+        }
+    ]
+}

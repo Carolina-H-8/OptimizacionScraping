@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portátiles Usados - SITEC SAS</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: #f1f5f9;
+            margin: 0;
+            padding: 20px;
+            color: #1e293b;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 24px;
+            background: #fff;
+            padding: 20px 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: #0f172a;
+        }
+
+        .meta {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-top: 4px;
+        }
+
+        .controles {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        input[type="text"] {
+            padding: 10px 14px;
+            width: 260px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+
+        .btn-filtro {
+            padding: 10px 14px;
+            background: #e2e8f0;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .btn-filtro:hover {
+            background: #cbd5e1;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.15s;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+        }
+
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+            background: #fff;
+            padding: 12px;
+            box-sizing: border-box;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .card-body {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            justify-content: space-between;
+        }
+
+        .card h3 {
+            font-size: 0.95rem;
+            line-height: 1.4;
+            margin: 0 0 12px 0;
+            color: #0f172a;
+        }
+
+        .precios {
+            margin-bottom: 14px;
+        }
+
+        .precio-original {
+            text-decoration: line-through;
+            color: #94a3b8;
+            font-size: 0.85rem;
+            display: block;
+        }
+
+        .precio-actual {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #059669;
+        }
+
+        .btn-ver {
+            display: block;
+            text-decoration: none;
+            text-align: center;
+            background: #2563eb;
+            color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .btn-ver:hover {
+            background: #1d4ed8;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <div>
+                <h1>Catálogo Portátiles Usados - SITEC SAS</h1>
+                <div class="meta" id="info-actualizacion">Cargando información...</div>
+            </div>
+            <div class="controles">
+                <input type="text" id="buscador" placeholder="Buscar marca o modelo (ej. Thinkpad)...">
+                <button class="btn-filtro" onclick="filtrarRapido('Thinkpad')">Solo Thinkpad</button>
+                <button class="btn-filtro" onclick="filtrarRapido('')">Ver todos</button>
+            </div>
+        </header>
+
+        <div class="grid" id="contenedor-productos"></div>
+    </div>
+
+    <script>
+        let productosGlobales = [];
+
+        async function cargarDatos() {
+            try {
+                const response = await fetch('datos.json?t=' + Date.now());
+                const data = await response.json();
+
+                document.getElementById('info-actualizacion').textContent =
+                    `Actualizado: ${data.ultima_actualizacion} • ${data.total} equipos disponibles`;
+
+                productosGlobales = data.productos || [];
+                renderizar(productosGlobales);
+            } catch (err) {
+                document.getElementById('info-actualizacion').textContent =
+                    'No se pudo cargar datos.json. Abre este archivo usando GitHub Pages o un servidor local.';
+                console.error(err);
+            }
+        }
+
+        function renderizar(lista) {
+            const grid = document.getElementById('contenedor-productos');
+            grid.innerHTML = '';
+
+            if (lista.length === 0) {
+                grid.innerHTML = '<p>No hay portátiles que coincidan con tu búsqueda.</p>';
+                return;
+            }
+
+            lista.forEach(item => {
+                const imgSrc = item.Imagen || 'https://via.placeholder.com/300x200?text=Sin+Imagen';
+                const precioOrigHTML = item['Precio original']
+                    ? `<span class="precio-original">${item['Precio original']}</span>`
+                    : '';
+
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                <img src="${imgSrc}" alt="${item.Nombre}" loading="lazy">
+                <div class="card-body">
+                    <h3>${item.Nombre}</h3>
+                    <div>
+                        <div class="precios">
+                            ${precioOrigHTML}
+                            <span class="precio-actual">${item['Precio con descuento'] || 'Consultar'}</span>
+                        </div>
+                        <a class="btn-ver" href="${item.Enlace}" target="_blank" rel="noopener">Ver en tienda</a>
+                    </div>
+                </div>
+            `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filtrarRapido(texto) {
+            const input = document.getElementById('buscador');
+            input.value = texto;
+            aplicarFiltro(texto);
+        }
+
+        function aplicarFiltro(texto) {
+            const termino = texto.toLowerCase();
+            const filtrados = productosGlobales.filter(p =>
+                p.Nombre.toLowerCase().includes(termino)
+            );
+            renderizar(filtrados);
+        }
+
+        document.getElementById('buscador').addEventListener('input', (e) => {
+            aplicarFiltro(e.target.value);
+        });
+
+        cargarDatos();
+    </script>
+
+</body>
+
+</html>

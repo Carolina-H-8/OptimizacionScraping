@@ -7,6 +7,9 @@ Original file is located at
     https://colab.research.google.com/drive/1oDU92PUI1i72r5J3JpOp30jZzUYedOBg
 """
 
+import json
+from datetime import datetime
+from urllib.parse import urljoin
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -21,41 +24,20 @@ headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/
 response = requests.get(url, headers=headers)
 
 #verificar peticion
-if response.status_code == 200:
-    print('Peticion exitosa')
-    soup = BeautifulSoup(response.text, 'html.parser')
-
-else:
-    print('Peticion fallida')
-
-print("Tamaño del HTML:", len(response.text))
-print("Título:", soup.title.get_text(strip=True) if soup.title else "Sin título")
-
-print("Productos:", len(soup.select(".product-card")))
-print("JSON-LD:", len(soup.select('script[type="application/ld+json"]')))
-
-# Mostrar algunos enlaces que parecen corresponder a productos
-for a in soup.select('a[href*="/products/"]')[:10]:
-    print(a.get_text(" ", strip=True), a.get("href"))
-
-import pandas as pd
-import re
-from bs4 import BeautifulSoup
-from urllib.parse import urljoin
-from IPython.display import display
+if response.status_code != 200:
+    print(f'Petición fallida. Código: {response.status_code}')
+    exit(1)
+print('Petición exitosa')
+soup = BeautifulSoup(response.text, 'html.parser')
 
 productos_lista = []
-
 tarjetas = soup.select(".wd-product")
 
+# Mostrar algunos enlaces que parecen corresponder a productos
 for producto in tarjetas:
-
     # Nombre
     nombre_elemento = producto.select_one(".wd-entities-title a")
-    nombre = (
-        nombre_elemento.get_text(" ", strip=True)
-        if nombre_elemento else ""
-    )
+    nombre = nombre_elemento.get_text(" ", strip=True) if nombre_elemento else ""
 
     # Enlace
     enlace = (
@@ -64,50 +46,29 @@ for producto in tarjetas:
         else ""
     )
 
-    # Obtener el texto del precio
-    precio_elemento = producto.select_one(".wrap-price .price")
-    texto_precio = (
-        precio_elemento.get_text(" ", strip=True)
-        if precio_elemento else ""
-    )
-
-    # Separar precio original y precio con descuento
+    # Precio original (tachado en etiqueta del)
     precio_original = ""
-    precio_descuento = ""
-
-    # Precio anterior puede identificarse con el tachado etiqueta (del)
-    elemento_original = producto.select_one(
-        ".price del .amount, .price del bdi, .price del"
-    )
-
+    elemento_original = producto.select_one(".price del .amount, .price del bdi, .price del")
     if elemento_original:
         precio_original = elemento_original.get_text(" ", strip=True)
 
-    # Precio actual en algunos casos con la etiqueta ins montan el precio actual
-    elemento_actual = producto.select_one(
-        ".price ins .amount, .price ins bdi, .price ins"
-    )
-
-    if elemento_actual:#si encontró el precio dentro de ins,lo extrae, lo guarda como precio actual
+    # Precio actual / con descuento
+    precio_descuento = ""
+    elemento_actual = producto.select_one(".price ins .amount, .price ins bdi, .price ins")
+    if elemento_actual:
         precio_descuento = elemento_actual.get_text(" ", strip=True)
     else:
-        # Si no hay oferta, buscar el precio normal
-        elemento_precio = producto.select_one(".wrap-price .price")
-
+        # Si no hay oferta, buscar directamente el primer .amount o .price dentro de la tarjeta
+        elemento_precio = producto.select_one(".price .amount, .price bdi, .price")
         if elemento_precio:
             texto = elemento_precio.get_text(" ", strip=True)
-
-            # Quitar el precio original para no confundirlo con el actual
-            if elemento_original:
-                texto_original = elemento_original.get_text(" ", strip=True)
-                texto = texto.replace(texto_original, "", 1)
-
+            if precio_original:
+                texto = texto.replace(precio_original, "", 1)
             precio_descuento = texto.strip()
 
     # Imagen
     imagen_elemento = producto.select_one(".wd-product-thumb img")
     imagen = ""
-
     if imagen_elemento:
         imagen = (
             imagen_elemento.get("data-src")
@@ -124,21 +85,22 @@ for producto in tarjetas:
             "Imagen": imagen
         })
 
+# Procesar con Pandas y eliminar duplicados
 df_productos = pd.DataFrame(productos_lista)
 
-df_productos = df_productos.drop_duplicates(
-    subset=["Enlace"]
-).reset_index(drop=True)
+if not df_productos.empty:
+    df_productos = df_productos.drop_duplicates(subset=["Enlace"]).reset_index(drop=True)
 
-print("Total de productos:", len(df_productos))
-display(df_productos)
+print("Total de productos extraídos:", len(df_productos))
 
-nombreBusqueda="Thinkpad"
+# Exportar datos a JSON para consumir desde el HTML
+salida_json = {
+    "ultima_actualizacion": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    "total": len(df_productos),
+    "productos": df_productos.to_dict(orient="records")
+}
 
-filtro = df_productos[
-    df_productos["Nombre"].str.contains(
-        nombreBusqueda, case=False, na=False
-    )
-]
-display(filtro)
+with open("datos.json", "w", encoding="utf-8") as f:
+    json.dump(salida_json, f, ensure_ascii=False, indent=4)
 
+print("Archivo datos.json actualizado correctamente.")
