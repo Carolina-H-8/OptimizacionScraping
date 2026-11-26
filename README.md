@@ -1,5 +1,8 @@
 # 💻 Web Scraping & Catálogo Dinámico — Portátiles Usados (SITEC SAS)
 
+## 🌐 Ver Catálogo en Vivo
+👉 **[Haz clic aquí para abrir la página web interactiva](https://carolina-h-8.github.io/OptimizacionScraping/)**
+
 Proyecto de extracción automatizada de datos web (*Web Scraping*) diseñado para monitorear, estructurar y visualizar en tiempo real el catálogo de computadores portátiles corporativos usados y reacondicionados de **SITEC SAS**.
 
 El flujo de trabajo integra **Python** para la extracción de datos, **GitHub Actions** para la ejecución continua en la nube y una interfaz web estática (**HTML/CSS/JS**) alojada en **GitHub Pages** que consume los datos actualizados dinámicamente.
